@@ -25,16 +25,15 @@
   "homepage": "https://github.com/taion/flux-resource-core#readme",
   "devDependencies": {
     "babel": "^5.4.7",
-    "babel-core": "^5.4.7",
-    "babel-eslint": "^3.1.10",
-    "babel-plugin-object-assign": "^1.1.0",
+    "babel-eslint": "^3.1.11",
     "chai": "^2.3.0",
     "eslint": "^0.22.1",
     "mocha": "^2.2.5"
   },
   "dependencies": {
+    "babel-runtime": "^5.4.7",
     "json-stable-stringify": "^1.0.0",
-    "pascal-case": "^1.1.1",
-    "pluralize": "^1.1.2"
+    "pluralize": "^1.1.2",
+    "upper-case-first": "^1.1.1"
   }
 }

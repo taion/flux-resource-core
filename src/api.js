@@ -1,34 +1,39 @@
-function formatParams(params) {
+function defaultFormatQueryString({params} = {}) {
   if (!params) {
-    return '';
+    return null;
   }
 
-  const paramParts = Object.keys(params).map(
+  const queryStringParts = Object.keys(params).map(
     key => `${encodeURI(key)}=${encodeURI(params[key])}`
   );
-  return `?${paramParts.join('&')}`;
+  return queryStringParts.join('&');
 }
 
 export default function generateApi(
-  {fetch, methodNames},
   {
     urlTemplate,
+    formatQueryString = defaultFormatQueryString,
     preprocessors = [],
     postprocessors = []
   }
 ) {
-  function doFetch(method, {id, data, options = {}}) {
-    const {params, requestOptions} = options;
-    const url = urlTemplate(id) + formatParams(params);
+  const {fetch, methodNames} = this;
+
+  function doFetch(method, {id, data, options}) {
+    const urlBase = urlTemplate(id || '');
+    const queryString = formatQueryString(options);
+    const url = queryString ? `${urlBase}?${queryString}` : urlBase;
 
     let request = {method, data};
     preprocessors.forEach(function applyPreprocessor(preprocessor) {
-      request = preprocessor(request, requestOptions) || request;
+      request = preprocessor(request, options) || request;
     });
 
     let result = this::fetch(url, request);
     postprocessors.forEach(function applyPostprocessor(postprocessor) {
-      result = result.then(response => postprocessor(response) || response);
+      result = result.then(
+        response => postprocessor(response, options) || response
+      );
     });
 
     return result;

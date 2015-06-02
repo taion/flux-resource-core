@@ -1,14 +1,14 @@
-import {methods} from './config';
+import {METHODS} from './config';
 
-export default function generateActions(
-  {generateDispatch, api, methodNames}
-) {
+export default function generateActions() {
+  const {methodNames} = this;
+
   const dispatches = {};
-  methods.forEach(function generateMethodDispatches(method) {
+  METHODS.forEach(method => {
     dispatches[method] = {
-      starting: generateDispatch(method),
-      done: generateDispatch(method, 'Done'),
-      failed: generateDispatch(method, 'Failed')
+      starting: this.generateDispatch(method, 'starting'),
+      done: this.generateDispatch(method, 'done'),
+      failed: this.generateDispatch(method, 'failed')
     };
   });
 
@@ -16,12 +16,16 @@ export default function generateActions(
     const dispatch = dispatches[method];
     this::dispatch.starting(argsObject);
 
-    return api[methodNames[method]](...args)
+    return this.getApi()[methodNames[method]](...args)
       .catch(error => this::dispatch.failed({error, ...argsObject}))
       .then(result => this::dispatch.done({result, ...argsObject}));
   }
 
   return {
+    getApi() {
+      throw new Error('not implemented');
+    },
+
     [methodNames.getMany](options) {
       return this::doAction('getMany', {options}, arguments);
     },

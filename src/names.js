@@ -1,27 +1,29 @@
-import pascalCase from 'pascal-case';
 import pluralize from 'pluralize';
+import upperCaseFirst from 'upper-case-first';
 
 export default function generateNames({name, plural}) {
   if (!name) {
     throw new Error('must specify name');
   }
 
-  name = pascalCase(name);
+  const properName = upperCaseFirst(name);
+  const properPlural = upperCaseFirst(plural || pluralize(name));
 
-  if (plural) {
-    plural = pascalCase(plural);
-  } else {
-    plural = pluralize(name);
+  if (properPlural === properName) {
+    throw new Error('plural and singular names must be different');
   }
 
   return {
-    name,
-    plural,
-    getMany: `get${plural}`,
-    getSingle: `get${name}`,
-    postSingle: `post${name}`,
-    putSingle: `put${name}`,
-    patchSingle: `patch${name}`,
-    deleteSingle: `delete${name}`
+    name: properName,
+    plural: properPlural,
+
+    methodNames: {
+      getMany: `get${properPlural}`,
+      getSingle: `get${properName}`,
+      postSingle: `post${properName}`,
+      putSingle: `put${properName}`,
+      patchSingle: `patch${properName}`,
+      deleteSingle: `delete${properName}`
+    }
   };
 }

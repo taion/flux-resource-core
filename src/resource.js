@@ -1,7 +1,7 @@
-import generateActions from 'actions';
-import generateApi from 'api';
-import generateNames from 'names';
-import generateStore from 'store';
+import generateActions from './actions';
+import generateApi from './api';
+import generateNames from './names';
+import generateStore from './store';
 
 /**
  * Base Flux resource class
@@ -15,41 +15,45 @@ export default class FluxResource {
     this.name = name;
     this.methodNames = methodNames;
 
-    const fetch = this.getFetch();
-    const generateDispatch = this.getGenerateDispatch();
+    this.fetch = this.getFetch(options);
 
-    const api = this.generateApi(
-      {fetch, methodNames}, options
-    );
-    const actions = this.generateActions(
-      {generateDispatch, api, methodNames}, options
-    );
-    const store = this.generateStore(
-      {methodNames}, options
-    );
+    this.api = this.generateApi(options);
+    this.actions = this.generateActions(options);
+    this.store = this.generateStore(options);
 
-    this.assignObject('Api', api);
-    this.assignObject('Actions', actions);
-    this.assignObject('Store', store);
+    this.assignObject('Api', this.api);
+    this.assignObject('Actions', this.actions);
+    this.assignObject('Store', this.store);
+  }
+
+  generateNames(options) {
+    return this::generateNames(options);
   }
 
   getFetch() {
     throw new Error('not implemented');
   }
 
-  getGenerateDispatch() {
+  generateApi(options) {
+    return this::generateApi(options);
+  }
+
+  generateDispatch() {
     throw new Error('not implemented');
+  }
+
+  generateActions(options) {
+    return this::generateActions(options);
+  }
+
+  generateStore(options) {
+    return this::generateStore(options);
   }
 
   assignObject(suffix, object) {
     const objectName = `${this.name}${suffix}`;
 
-    Object.defineProperty(object, 'name', {value: objectName});
+    object.displayName = objectName;
     this[objectName] = object;
   }
 }
-
-Object.assign(
-  FluxResource.prototype,
-  {generateActions, generateApi, generateNames, generateStore}
-);

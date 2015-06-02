@@ -4,8 +4,8 @@ function defaultGetId(item) {
   return item.id;
 }
 
-function defaultCollectionCacheKey(options) {
-  return stableStringify(options);
+function defaultCollectionCacheKey({params = {}} = {}) {
+  return stableStringify(params);
 }
 
 function defaultItemCacheKey(id) {
@@ -13,50 +13,51 @@ function defaultItemCacheKey(id) {
 }
 
 export default function generateStore(
-  {methodNames},
   {
     getId = defaultGetId,
     collectionCacheKey = defaultCollectionCacheKey,
     itemCacheKey = defaultItemCacheKey
   }
 ) {
+  const {methodNames} = this;
+
   return {
-    initStorage() {
+    resetCache() {
       this.collections = {};
       this.items = {};
     },
 
+    getId,
+    collectionCacheKey,
+    itemCacheKey,
+
     [methodNames.getMany](options) {
-      const collection = this.collections[collectionCacheKey(options)];
+      const collection = this.collections[this.collectionCacheKey(options)];
       if (!collection) {
         return collection;
       }
 
-      return collection.map(id => this.items[itemCacheKey(id, options)]);
+      return collection.map(id => this.items[this.itemCacheKey(id, options)]);
     },
 
     [methodNames.getSingle](id, options) {
-      return this.items[itemCacheKey(id, options)];
-    },
-
-    clearCache() {
-      this.initStorage();
+      return this.items[this.itemCacheKey(id, options)];
     },
 
     receiveMany({options, result}) {
       const resultIds = [];
-      this.collections[collectionCacheKey(options)] = resultIds;
+      this.collections[this.collectionCacheKey(options)] = resultIds;
 
       result.forEach(item => {
-        const id = getId(item);
+        const id = this.getId(item);
 
         resultIds.push(id);
-        this.items[itemCacheKey(id, options)] = item;
+        this.items[this.itemCacheKey(id, options)] = item;
       });
     },
 
     receiveSingle({id, options, result}) {
-      this.items[itemCacheKey(id, options)] = result;
+      this.items[this.itemCacheKey(id, options)] = result;
     }
   };
 }
