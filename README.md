@@ -1,2 +1,2 @@
 # flux-resource-core
-Automatic Flux node generation for RESTful resources
+Automatic Flux object generation for RESTful resources

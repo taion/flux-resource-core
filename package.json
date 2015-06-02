@@ -1,7 +1,7 @@
 {
   "name": "flux-resource-core",
   "version": "0.0.0",
-  "description": "Automatic Flux node generation for RESTful resources",
+  "description": "Automatic Flux object generation for RESTful resources",
   "main": "lib/index.js",
   "scripts": {
     "build": "eslint src && babel src --out-dir lib",
@@ -25,12 +25,16 @@
   "homepage": "https://github.com/taion/flux-resource-core#readme",
   "devDependencies": {
     "babel": "^5.4.7",
-    "babel-eslint": "^3.1.9",
+    "babel-core": "^5.4.7",
+    "babel-eslint": "^3.1.10",
+    "babel-plugin-object-assign": "^1.1.0",
     "chai": "^2.3.0",
-    "eslint": "^0.21.2",
+    "eslint": "^0.22.1",
     "mocha": "^2.2.5"
   },
   "dependencies": {
+    "json-stable-stringify": "^1.0.0",
+    "pascal-case": "^1.1.1",
     "pluralize": "^1.1.2"
   }
 }
