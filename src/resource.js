@@ -11,9 +11,7 @@ import generateStore from './store';
  */
 export default class FluxResource {
   constructor(options) {
-    const {name, methodNames} = this.generateNames(options);
-    this.name = name;
-    this.methodNames = methodNames;
+    Object.assign(this, this.generateNames(options));
 
     this.fetch = this.getFetch(options);
 
