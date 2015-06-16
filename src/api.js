@@ -11,7 +11,7 @@ function defaultFormatQueryString({params} = {}) {
 
 export default function generateApi(
   {
-    urlTemplate,
+    urlFunc,
     formatQueryString = defaultFormatQueryString,
     preprocessors = [],
     postprocessors = []
@@ -20,7 +20,7 @@ export default function generateApi(
   const {fetch, methodNames} = this;
 
   function doFetch(method, {id, data, options}) {
-    const urlBase = urlTemplate(id || '');
+    const urlBase = urlFunc(id || '');
     const queryString = formatQueryString(options);
     const url = queryString ? `${urlBase}?${queryString}` : urlBase;
 
