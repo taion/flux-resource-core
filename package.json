@@ -24,14 +24,14 @@
   },
   "homepage": "https://github.com/taion/flux-resource-core#readme",
   "devDependencies": {
-    "babel": "^5.4.7",
-    "babel-eslint": "^3.1.11",
-    "chai": "^2.3.0",
-    "eslint": "^0.22.1",
+    "babel": "^5.5.8",
+    "babel-eslint": "^3.1.15",
+    "chai": "^3.0.0",
+    "eslint": "^0.23.0",
     "mocha": "^2.2.5"
   },
   "dependencies": {
-    "babel-runtime": "^5.4.7",
+    "babel-runtime": "^5.5.8",
     "json-stable-stringify": "^1.0.0",
     "pluralize": "^1.1.2",
     "upper-case-first": "^1.1.1"
