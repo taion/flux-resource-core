@@ -17,8 +17,13 @@ export default function generateActions() {
     this::dispatch.starting(argsObject);
 
     return this.getApi()[methodNames[method]](...args)
-      .catch(error => this::dispatch.failed({error, ...argsObject}))
-      .then(result => this::dispatch.done({result, ...argsObject}));
+      .then(
+        result => this::dispatch.done({result, ...argsObject}),
+        error => {
+          this::dispatch.failed({error, ...argsObject});
+          throw error;
+        }
+      );
   }
 
   return {
