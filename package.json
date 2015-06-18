@@ -1,6 +1,6 @@
 {
   "name": "flux-resource-core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Automatic Flux object generation for RESTful resources",
   "main": "lib/index.js",
   "scripts": {
