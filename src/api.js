@@ -1,4 +1,4 @@
-function defaultFormatQueryString({params} = {}) {
+function defaultFormatQueryString(params) {
   if (!params) {
     return null;
   }
@@ -19,9 +19,9 @@ export default function generateApi(
 ) {
   const {fetch, methodNames} = this;
 
-  function doFetch(method, {id, data, options}) {
+  function doFetch(method, {id, data, options = {}}) {
     const urlBase = urlFunc(id || '');
-    const queryString = formatQueryString(options);
+    const queryString = formatQueryString(options.params);
     const url = queryString ? `${urlBase}?${queryString}` : urlBase;
 
     const processorOptions = {id, ...options};
