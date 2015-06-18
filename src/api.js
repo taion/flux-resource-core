@@ -28,14 +28,18 @@ export default function generateApi(
 
     let request = {method, body: data};
     preprocessors.forEach(function applyPreprocessor(preprocessor) {
-      request = preprocessor(request, processorOptions) || request;
+      const newRequest = preprocessor(request, processorOptions);
+      if (newRequest !== undefined) {
+        request = newRequest;
+      }
     });
 
     let result = this::fetch(url, request);
-    postprocessors.forEach(function applyPostprocessor(postprocessor) {
-      result = result.then(
-        response => postprocessor(response, processorOptions) || response
-      );
+    postprocessors.forEach(function addPostprocessor(postprocessor) {
+      result = result.then(function applyPostprocessor(response) {
+        const newResponse = postprocessor(response, processorOptions);
+        return newResponse !== undefined ? newResponse : response;
+      });
     });
 
     return result;
