@@ -4,60 +4,62 @@ function defaultGetId(item) {
   return item.id;
 }
 
-function defaultCollectionCacheKey({params = {}} = {}) {
+function defaultCollectionKey({params = {}} = {}) {
   return stableStringify(params);
 }
 
-function defaultItemCacheKey(id) {
+function defaultItemKey(id) {
   return id;
 }
 
-export default function generateStore(
-  {
-    getId = defaultGetId,
-    collectionCacheKey = defaultCollectionCacheKey,
-    itemCacheKey = defaultItemCacheKey
-  }
-) {
+export default function generateStore({
+  getId = defaultGetId,
+  collectionKey = defaultCollectionKey,
+  itemKey = defaultItemKey
+}) {
   const {methodNames} = this;
 
   return {
-    resetCache() {
-      this.collections = {};
-      this.items = {};
+    getInitialState() {
+      return {
+        collections: {},
+        items: {}
+      };
     },
 
     getId,
-    collectionCacheKey,
-    itemCacheKey,
+    collectionKey,
+    itemKey,
 
     [methodNames.getMany](options) {
-      const collection = this.collections[this.collectionCacheKey(options)];
+      const collection =
+        this.state.collections[this.collectionKey(options)];
       if (!collection) {
         return collection;
       }
 
-      return collection.map(id => this.items[this.itemCacheKey(id, options)]);
+      return collection.map(
+        id => this.state.items[this.itemKey(id, options)]
+      );
     },
 
     [methodNames.getSingle](id, options) {
-      return this.items[this.itemCacheKey(id, options)];
+      return this.state.items[this.itemKey(id, options)];
     },
 
     receiveMany({options, result}) {
       const resultIds = [];
-      this.collections[this.collectionCacheKey(options)] = resultIds;
-
       result.forEach(item => {
         const id = this.getId(item);
-
         resultIds.push(id);
-        this.items[this.itemCacheKey(id, options)] = item;
+        this.receiveSingle({id, options, result: item});
       });
+
+      this.state.collections[this.collectionKey(options)] = resultIds;
     },
 
     receiveSingle({id, options, result}) {
-      this.items[this.itemCacheKey(id, options)] = result;
+      this.state.items[this.itemKey(id, options)] = result;
     }
   };
 }
