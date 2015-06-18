@@ -24,15 +24,17 @@ export default function generateApi(
     const queryString = formatQueryString(options);
     const url = queryString ? `${urlBase}?${queryString}` : urlBase;
 
-    let request = {method, data};
+    const processorOptions = {id, ...options};
+
+    let request = {method, body: data};
     preprocessors.forEach(function applyPreprocessor(preprocessor) {
-      request = preprocessor(request, options) || request;
+      request = preprocessor(request, processorOptions) || request;
     });
 
     let result = this::fetch(url, request);
     postprocessors.forEach(function applyPostprocessor(postprocessor) {
       result = result.then(
-        response => postprocessor(response, options) || response
+        response => postprocessor(response, processorOptions) || response
       );
     });
 
