@@ -52,6 +52,7 @@ export default function generateStore({
       result.forEach(item => {
         const id = this.getId(item);
         resultIds.push(id);
+
         this.receiveSingle({id, options, result: item});
       });
 
@@ -59,6 +60,10 @@ export default function generateStore({
     },
 
     receiveSingle({id, options, result}) {
+      if (id === undefined) {
+        id = this.getId(result);
+      }
+
       this.state.items[this.itemKey(id, options)] = result;
     }
   };
