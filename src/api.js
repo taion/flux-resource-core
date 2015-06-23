@@ -1,10 +1,10 @@
-function defaultFormatQueryString(params) {
-  if (!params) {
+function defaultFormatQueryString(options) {
+  if (!options) {
     return null;
   }
 
-  const queryStringParts = Object.keys(params).map(
-    key => `${encodeURI(key)}=${encodeURI(params[key])}`
+  const queryStringParts = Object.keys(options).map(
+    key => `${encodeURI(key)}=${encodeURI(options[key])}`
   );
   return queryStringParts.join('&');
 }
@@ -19,9 +19,9 @@ export default function generateApi(
 ) {
   const {fetch, methodNames} = this;
 
-  function doFetch(method, {id, data, options = {}}) {
+  function doFetch(method, {id, data, options}) {
     const urlBase = urlFunc(id || '');
-    const queryString = formatQueryString(options.params);
+    const queryString = this.formatQueryString(options);
     const url = queryString ? `${urlBase}?${queryString}` : urlBase;
 
     const processorOptions = {id, ...options};
@@ -46,6 +46,8 @@ export default function generateApi(
   }
 
   return {
+    formatQueryString,
+
     [methodNames.getMany](options) {
       return this::doFetch('GET', {options});
     },
