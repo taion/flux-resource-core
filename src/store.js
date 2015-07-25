@@ -4,11 +4,7 @@ function defaultGetId(item) {
   return item.id;
 }
 
-function defaultCollectionKey(options) {
-  if (!options) {
-    return '';
-  }
-
+function defaultCollectionKey(options = {}) {
   return stableStringify(options);
 }
 
