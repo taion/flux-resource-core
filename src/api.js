@@ -27,17 +27,17 @@ export default function generateApi(
     const processorOptions = {id, ...options};
 
     let request = {method, body: data};
-    preprocessors.forEach(function applyPreprocessor(preprocessor) {
-      const newRequest = preprocessor(request, processorOptions);
+    preprocessors.forEach(preprocessor => {
+      const newRequest = this::preprocessor(request, processorOptions);
       if (newRequest !== undefined) {
         request = newRequest;
       }
     });
 
     let result = this::fetch(url, request);
-    postprocessors.forEach(function addPostprocessor(postprocessor) {
-      result = result.then(function applyPostprocessor(response) {
-        const newResponse = postprocessor(response, processorOptions);
+    postprocessors.forEach(postprocessor => {
+      result = result.then(response => {
+        const newResponse = this::postprocessor(response, processorOptions);
         return newResponse !== undefined ? newResponse : response;
       });
     });
