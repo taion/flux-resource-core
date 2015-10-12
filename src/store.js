@@ -47,6 +47,10 @@ export default function generateStore({
       return this.state.items[this.itemKey(id, options)];
     },
 
+    getManyDone(payload) {
+      this.receiveMany(payload);
+    },
+
     receiveMany({options, result}) {
       const resultIds = [];
       result.forEach(item => {
@@ -57,6 +61,10 @@ export default function generateStore({
       });
 
       this.state.collections[this.collectionKey(options)] = resultIds;
+    },
+
+    getSingleDone(payload) {
+      this.receiveSingle(payload);
     },
 
     receiveSingle({id, options, result}) {
