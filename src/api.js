@@ -23,7 +23,7 @@ export default function generateApi(
     formatQueryString,
 
     execute(method, {url, id, data, options}) {
-      const urlBase = url || urlFunc(id || '');
+      const urlBase = url || this::urlFunc(id || '', method);
       const queryString = this.formatQueryString(options);
       const urlFull = queryString ? `${urlBase}?${queryString}` : urlBase;
 
