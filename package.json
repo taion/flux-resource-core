@@ -34,6 +34,7 @@
     "babel-runtime": "^5.5.8",
     "json-stable-stringify": "^1.0.0",
     "pluralize": "^1.1.2",
+    "query-string": "^3.0.0",
     "upper-case-first": "^1.1.1"
   }
 }

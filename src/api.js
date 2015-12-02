@@ -1,18 +1,9 @@
-function defaultFormatQueryString(options) {
-  if (!options) {
-    return null;
-  }
-
-  const queryStringParts = Object.keys(options).map(
-    key => `${encodeURI(key)}=${encodeURI(options[key])}`
-  );
-  return queryStringParts.join('&');
-}
+import queryString from 'query-string';
 
 export default function generateApi(
   {
     urlFunc,
-    formatQueryString = defaultFormatQueryString,
+    formatQueryString = queryString.stringify,
     preprocessors = [],
     postprocessors = []
   }
@@ -24,8 +15,8 @@ export default function generateApi(
 
     execute(method, {url, id, data, options}) {
       const urlBase = url || this::urlFunc(id || '', method);
-      const queryString = this.formatQueryString(options);
-      const urlFull = queryString ? `${urlBase}?${queryString}` : urlBase;
+      const search = this.formatQueryString(options);
+      const urlFull = search ? `${urlBase}?${search}` : urlBase;
 
       const processorOptions = {id, ...options};
 
